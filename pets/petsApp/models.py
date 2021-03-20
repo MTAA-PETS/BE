@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.lookups import PostgresOperatorLookup
 
 
 class Pouzivatel(models.Model):
