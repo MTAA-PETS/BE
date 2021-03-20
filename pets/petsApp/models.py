@@ -3,9 +3,9 @@ from django.db.models.lookups import PostgresOperatorLookup
 
 
 class Pouzivatel(models.Model):
-    nick = models.CharField(max_length=30)
-    email = models.EmailField(max_length=50)
-    narodenie = models.CharField(max_length=20)
+    nick = models.CharField(max_length=30, unique=True)
+    email = models.EmailField(max_length=50, unique=True)
+    narodenie = models.DateField()
     heslo = models.CharField(max_length=255)
     id_faktury = models.IntegerField()
 
