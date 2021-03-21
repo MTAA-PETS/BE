@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.lookups import PostgresOperatorLookup
+from django.contrib.postgres.fields import ArrayField
 
 
 class Pouzivatel(models.Model):
@@ -13,7 +14,7 @@ class Pouzivatel(models.Model):
 class Faktura(models.Model):
     id_zviera = models.IntegerField()
     id_pouzivatel = models.IntegerField()
-    datum = models.CharField(max_length=10)
+    datum = models.DateTimeField()
     suma = models.DecimalField(max_digits=6, decimal_places=2)
 
 
@@ -33,4 +34,5 @@ class Zviera(models.Model):
     id_pouzivatel = models.IntegerField()
     fond = models.DecimalField(max_digits=6, decimal_places=2)
     id_vlastnosti = models.IntegerField()
-    obrazky = models.CharField(max_length=255)
+    obrazky = ArrayField(models.CharField(
+        max_length=255, blank=True), size=4)
