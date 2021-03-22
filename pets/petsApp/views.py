@@ -1,20 +1,18 @@
 from django.http.response import JsonResponse
-from .models import Vlastnosti, Zviera, Pouzivatel, Faktura
+from .models import User, Invoice, Details, Pet
 from rest_framework.decorators import api_view
-from .serializers import AnimalSerializer, VlastnostiSerializer
+from .serializers import PetSerializer, DetailsSerializer
 from rest_framework.response import Response
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import validators
-from django.contrib.auth import authenticate
 import bcrypt
 import datetime
 import json
 import os
 from django.views.decorators.http import require_http_methods
-from django.shortcuts import render
 
-signed = None
+logged = None
 id_animal = 0
 
 # REGISTRÁCIA
@@ -22,7 +20,7 @@ id_animal = 0
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def newUser(request):
+def signIn(request):
     res = {}
     status_code = 200
     body = json.loads(request.body)
@@ -37,8 +35,8 @@ def newUser(request):
     else:
         res["details"] = "Validation passed"
         hashed = bcrypt.hashpw(body['heslo'].encode(), bcrypt.gensalt())
-        Pouzivatel.objects.create(
-            nick=body["nick"], email=body["email"], narodenie=body["narodenie"], heslo=hashed.decode(), id_faktury=0)
+        User.objects.create(
+            nick=body["nick"], email=body["email"], birth=body["narodenie"], password=hashed.decode(), id_invoice=0)
     return JsonResponse(res, status=status_code)
 
 # PRIHLASENIE
@@ -46,19 +44,19 @@ def newUser(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def signIn(request):
+def logIn(request):
     body = json.loads(request.body)
-    pouzivatel = None
+    user = None
     if "@" in body["nick/email"]:
-        pouzivatel = Pouzivatel.objects.filter(
+        user = User.objects.filter(
             email=body["nick/email"]).first()
     else:
-        pouzivatel = Pouzivatel.objects.filter(nick=body["nick/email"]).first()
+        user = User.objects.filter(nick=body["nick/email"]).first()
 
-    if pouzivatel and isinstance(body['heslo'], str):
-        hashed = pouzivatel.heslo.encode()
+    if user and isinstance(body['heslo'], str):
+        hashed = user.heslo.encode()
         if bcrypt.hashpw(body['heslo'].encode(), hashed) == hashed:
-            signed = pouzivatel
+            logged = user
             return HttpResponse(status=200)
         else:
             return HttpResponse(status=401)
@@ -69,31 +67,31 @@ def signIn(request):
 
 
 @api_view(['get'])
-def animals(request):
-    animals = Vlastnosti.objects.order_by(
-        'druh').values_list('druh').distinct()
+def pets(request):
+    pets = Details.objects.order_by(
+        'species').values_list('species').distinct()
 
     species = request.GET.get('species')
     if species != None:
-        res = Vlastnosti.objects.filter(
-            druh__iexact=species).values_list('typ').distinct()
+        res = Details.objects.filter(
+            species__iexact=species).values_list('kind').distinct()
         return HttpResponse(list(res), status=200)
 
-    typeanimals = request.GET.get('type')
-    if typeanimals != None:
-        res = Vlastnosti.objects.filter(
-            typ__iexact=typeanimals).values_list('plemeno')
+    kind = request.GET.get('kind')
+    if kind != None:
+        res = Details.objects.filter(
+            kind__iexact=kind).values_list('breed')
         return HttpResponse(list(res), status=200)
 
-    plemeno = request.GET.get('breed')
-    if plemeno != None:
-        res = Vlastnosti.objects.filter(
-            plemeno__iexact=plemeno).values_list('meno', 'vek', 'vaha', 'potrava', 'popis', 'cena')
+    breed = request.GET.get('breed')
+    if breed != None:
+        res = Details.objects.filter(
+            breed__iexact=breed).values_list('name', 'age', 'weight', 'food', 'details', 'price')
         animal = res.values('id')
         id_animal = animal[0]['id']
-        return JsonResponse(list(res.values('meno', 'vek', 'vaha', 'potrava', 'popis', 'cena')), status=200, safe=False)
+        return JsonResponse(list(res.values('name', 'age', 'weight', 'food', 'details', 'price')), status=200, safe=False)
 
-    return HttpResponse(list(animals), status=200)
+    return HttpResponse(list(pets), status=200)
 
 # UPRAVA FONDU ZVIERATA
 
@@ -101,7 +99,7 @@ def animals(request):
 @api_view(['PUT'])
 def addFond(request, num):
     id_animal = 122
-    a = Zviera.objects.get(pk=id_animal)
+    a = Pet.objects.get(pk=id_animal)
     a.fond = float(num)
     a.save()
     return HttpResponse(status=200)
@@ -111,11 +109,11 @@ def addFond(request, num):
 
 @api_view(['POST'])
 def invoice(request):
-    id_zviera = 246
+    id_pet = 246
     signed = 6
-    cena = Vlastnosti.objects.get(pk=id_zviera).cena
-    i = Faktura(id_zviera=246, id_pouzivatel=signed,
-                datum=datetime.datetime.now(), suma=cena)
+    price = Details.objects.get(pk=id_pet).price
+    i = Invoice(id_pet=246, id_user=signed,
+                date=datetime.datetime.now(), amount=price)
     i.save()
     return HttpResponse(status=201)
 
@@ -124,9 +122,9 @@ def invoice(request):
 
 @api_view(['PUT'])
 def addImages(request):
-    lowest = Zviera.objects.earliest('id')
-    highest = Zviera.objects.latest('id')
-    imgs = []
+    lowest = Pet.objects.earliest('id')
+    highest = Pet.objects.latest('id')
+    images = []
     count = 0
     for i in range(lowest.id, highest.id):
         count += 1
@@ -134,10 +132,10 @@ def addImages(request):
             if(os.path.exists(os.path.join(os.path.dirname(__file__), 'img\\', f'{count}_{k}.jpg'))):
                 obr = os.path.join(os.path.dirname(__file__),
                                    'img\\', f'{count}_{k}.jpg')
-                imgs.append(obr.replace('\\', '/'))
-        a = Zviera.objects.get(pk=i)
-        a.obrazky = imgs
+                images.append(obr.replace('\\', '/'))
+        a = Pet.objects.get(pk=i)
+        a.imgs = images
         a.save()
-        imgs = []
+        images = []
 
     return HttpResponse(status=200)
