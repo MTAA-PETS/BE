@@ -18,5 +18,5 @@ class DetailsSerializer(ModelSerializer):
 class UserSerializer(serializers.Serializer):
     nick = serializers.CharField(required=True)
     email = serializers.EmailField(required=True)
-    narodenie = serializers.DateField(required=True)
-    heslo = serializers.CharField(required=True)
+    birth = serializers.DateField(required=True)
+    password = serializers.CharField(required=True)

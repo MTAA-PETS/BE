@@ -4,15 +4,15 @@ from django.urls import path
 from petsApp import views
 
 urlpatterns = [
-    # path('user/', views.getUser),
+    path('user/<int:id>/', views.getUser),
     path('user/signin/', views.signIn),
     path('user/login/', views.logIn),
-    #path('user/signout/', views.signOut),
-    #path('user/addInvoice/<int:num>', views.addInvoice),
+    #path('user/logout/', views.signOut),
+    path('user/addInvoice/', views.addInvoice),
     path('pets/', views.pets),
-    #path('pets/search/', views.search),
-    path('pets/addFond/<str:num>/', views.addFond),
+    path('pets/search/', views.searchPet),
+    path('pets/addFond/<str:num>/<int:id>/', views.addFond),
     path('pets/addImages/', views.addImages),
-    #path('pets/delete/{int:num}/', views.delPet),
-    path('invoice/', views.invoice),
+    path('pets/delete/<int:id>/', views.delPet),
+    path('invoice/<int:id>/<int:user>/', views.invoice),
 ]
