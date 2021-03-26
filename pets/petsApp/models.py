@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from django.core.validators import int_list_validator
+from django.contrib import auth
 
 
 class User(models.Model):
@@ -8,7 +8,8 @@ class User(models.Model):
     email = models.EmailField(max_length=50, unique=True)
     birth = models.DateField()
     password = models.CharField(max_length=255)
-    id_invoice =ArrayField(models.IntegerField(), size=100)
+    id_invoice = ArrayField(models.IntegerField(), size=100)
+
 
 class Invoice(models.Model):
     id_pet = models.IntegerField()
@@ -33,4 +34,4 @@ class Pet(models.Model):
     id_user = models.IntegerField()
     fond = models.DecimalField(max_digits=6, decimal_places=2)
     id_details = models.IntegerField()
-    imgs = ArrayField(models.CharField(max_length=255, blank=True), size=4)
+    imgs = ArrayField(models.BinaryField(blank=True), size=4)

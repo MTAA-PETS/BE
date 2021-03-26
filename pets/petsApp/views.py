@@ -1,26 +1,27 @@
 from petsApp.filters import DynamicSearchFilter
 from django.http.response import JsonResponse
 from .models import User, Invoice, Details, Pet
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from .serializers import PetSerializer, DetailsSerializer
 from rest_framework.response import Response
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import validators
 import bcrypt
-import datetime
+from datetime import datetime, date
 from rest_framework import filters
 import json
 import os
 from django.views.decorators.http import require_http_methods
+import base64
 
 # GET user info
 
 
 @api_view(['GET'])
-def getUser(request, id):
-    u = User.objects.get(id=id)
-    # id faktury, meno zvery, datum, cena
+def getUser(request):
+    body = json.loads(request.body)
+    u = User.objects.get(id=body['id'])
     invoices = u.id_invoice
     res = []
     for i in invoices:
@@ -36,7 +37,8 @@ def getUser(request, id):
 
 @csrf_exempt
 @require_http_methods(["POST"])
-def signIn(request):
+def signUp(request):
+
     res = {}
     status_code = 200
     body = json.loads(request.body)
@@ -49,11 +51,23 @@ def signIn(request):
         res["errors"] = validation["errors"]
         status_code = 400
     else:
-        hashed = bcrypt.hashpw(body['password'].encode(), bcrypt.gensalt())
-        user = User.objects.create(
-            nick=body["nick"], email=body["email"], birth=body["birth"], password=hashed.decode(), id_invoice=0)
-        user.save()
-        res["details"] = user.id
+        if User.objects.filter(nick=body["nick"]).exists() or User.objects.filter(email=body["email"]).exists():
+            res["errors"] = "Duplicate values"
+            status_code = 403
+        else:
+            days_in_year = 365.2425
+            age = int(
+                (datetime.now() - datetime.strptime(body['birth'], '%Y-%m-%d')).days / days_in_year)
+            if (age >= 18):
+                hashed = bcrypt.hashpw(
+                    body['password'].encode(), bcrypt.gensalt())
+                id_inv = [0]
+                myuser = User.objects.create(
+                    nick=body["nick"], email=body["email"], birth=body["birth"], password=hashed.decode(), id_invoice=id_inv)
+                myuser.save()
+                return JsonResponse(myuser.id, status=200, safe=False)
+            else:
+                res["errors"] = "Not adult"
     return JsonResponse(res, status=status_code)
 
 # PRIHLASENIE
@@ -78,6 +92,14 @@ def logIn(request):
             return HttpResponse(status=401)
     else:
         return HttpResponse(status=401)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def logOut(request):
+    body = json.loads(request.body)
+    u = body['id']
+    return JsonResponse(0, status=200, safe=False)
 
 # DRUHY ZVIERAT
 
@@ -114,9 +136,13 @@ def pets(request):
 
 
 @api_view(['PUT'])
-def addFond(request, num, id):
+def addFond(request):
+    body = json.loads(request.body)
+    num = float(body['amount'])
+    id = body['id']
     a = Pet.objects.get(pk=id)
-    a.fond = float(num)
+    amount = a.fond
+    a.fond = num + float(amount)
     a.save()
     return HttpResponse(status=200)
 
@@ -124,10 +150,11 @@ def addFond(request, num, id):
 
 
 @api_view(['POST'])
-def invoice(request, id, user):
-    price = Details.objects.get(pk=id).price
-    i = Invoice(id_pet=id, id_user=user,
-                date=datetime.datetime.now(), amount=price)
+def invoice(request):
+    body = json.loads(request.body)
+    price = Details.objects.get(pk=body['id_pet']).price
+    i = Invoice(id_pet=body['id_pet'], id_user=body['id_user'],
+                date=datetime.now(), amount=price)
     i.save()
     return HttpResponse(status=201)
 
@@ -136,7 +163,7 @@ def invoice(request, id, user):
 
 @api_view(['PUT'])
 def addInvoice(request):
-    i = Invoice.objects.get(id=1)
+    i = Invoice.objects.latest('id')
     i_userId = i.id_user
     if(User.objects.filter(id=i_userId).exists()):
         u = User.objects.get(id=i_userId)
@@ -156,13 +183,16 @@ def addImages(request):
     highest = Pet.objects.latest('id')
     images = []
     count = 0
+    #img = base64.encodestring(open('C:/Users/Lucia/Desktop/FIIT/6.Semester/MTAA/Pets_App/pets/petsApp/img/1_1.jpg', 'rb').read())
     for i in range(lowest.id, highest.id+1):
         count += 1
         for k in range(1, 3):
             if(os.path.exists(os.path.join(os.path.dirname(__file__), 'img\\', f'{count}_{k}.jpg'))):
                 obr = os.path.join(os.path.dirname(__file__),
                                    'img\\', f'{count}_{k}.jpg')
-                images.append(obr.replace('\\', '/'))
+                path = obr.replace('\\', '/')
+                img = base64.encodestring(open(path, 'rb').read())
+                images.append(img)
         a = Pet.objects.get(pk=i)
         a.imgs = images
         a.save()
@@ -175,7 +205,6 @@ def addImages(request):
 
 @api_view(['GET'])
 def searchPet(request):
-    
     if request.method == 'GET':
         filters = {}
         for key, value in request.GET.items():
@@ -188,7 +217,9 @@ def searchPet(request):
 
 # DELETE ADOPTOVANEHO
 @api_view(['DELETE'])
-def delPet(request, id):
+def delPet(request):
+    body = json.loads(request.body)
+    id = body['id']
     if(Pet.objects.filter(id=id).exists()):
         Pet.objects.filter(id=id).delete()
         Details.objects.filter(id=id).delete()
