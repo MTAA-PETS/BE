@@ -61,7 +61,7 @@ def signUp(request):
             if (age >= 18):
                 hashed = bcrypt.hashpw(
                     body['password'].encode(), bcrypt.gensalt())
-                id_inv = [0]
+                id_inv = []
                 myuser = User.objects.create(
                     nick=body["nick"], email=body["email"], birth=body["birth"], password=hashed.decode(), id_invoice=id_inv)
                 myuser.save()
@@ -113,13 +113,13 @@ def pets(request):
     if species != None:
         res = Details.objects.filter(
             species__iexact=species).values_list('kind').distinct()
-        return HttpResponse(list(res), status=200)
+        return JsonResponse(list(res), status=200, safe=True)
 
     kind = request.GET.get('kind')
     if kind != None:
         res = Details.objects.filter(
             kind__iexact=kind).values_list('breed')
-        return HttpResponse(list(res), status=200)
+        return JsonResponse(list(res), status=200, safe=False)
 
     breed = request.GET.get('breed')
     if breed != None:
@@ -129,7 +129,7 @@ def pets(request):
         id_animal = animal[0]['id']
         return JsonResponse(list(res.values('id', 'name', 'age', 'weight', 'food', 'info', 'price')), status=200, safe=False)
 
-    return HttpResponse(list(pets), status=200)
+    return JsonResponse(list(pets), status=200, safe=False)
 
 
 # UPRAVA FONDU ZVIERATA
@@ -139,6 +139,8 @@ def pets(request):
 def addFond(request):
     body = json.loads(request.body)
     num = float(body['amount'])
+    if num < 5.0:
+        return HttpResponse(status=422)
     id = body['id']
     a = Pet.objects.get(pk=id)
     amount = a.fond

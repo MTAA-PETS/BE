@@ -14,5 +14,5 @@ urlpatterns = [
     path('pets/addFond/', views.addFond),
     path('pets/addImages/', views.addImages),
     path('pets/delete/', views.delPet),
-    path('invoice/', views.invoice),  
+    path('invoice/', views.invoice),
 ]
