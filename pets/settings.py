@@ -1,5 +1,10 @@
 import django_heroku
 from pathlib import Path
+import environ
+import dj_database_url
+
+env = environ.Env()
+environ.Env.read_env()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -59,14 +64,7 @@ WSGI_APPLICATION = 'pets.wsgi.application'
 
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'PetsApp',
-        'USER': 'postgres',
-        'PASSWORD': 'ChcemJednorozca1',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config()
 }
 
 
