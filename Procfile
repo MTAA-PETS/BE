@@ -1,1 +1,1 @@
-web: gunicorn petsApp.wsgi
+web: gunicorn pets.wsgi
