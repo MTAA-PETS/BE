@@ -19,9 +19,8 @@ import base64
 
 
 @api_view(['GET'])
-def getUser(request):
-    body = json.loads(request.body)
-    u = User.objects.get(id=body['id'])
+def getUser(request, id):
+    u = User.objects.get(id=id)
     invoices = u.id_invoice
     res = []
     for i in invoices:
