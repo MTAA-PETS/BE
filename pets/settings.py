@@ -12,6 +12,8 @@ SECRET_KEY = 'bt_2lcj-wiu7aks6tb)qh9fr#%5&j_^bw$3+*bx(3j)1o!uai2'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -104,7 +106,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
 
 django_heroku.settings(locals())
