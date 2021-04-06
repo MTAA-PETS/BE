@@ -29,8 +29,13 @@ def getUser(request, id):
         name = pet.name
         res.append({"id:": i, "name:": name,
                     "date:": invoice.date, "amount:": invoice.amount})
-    return JsonResponse({"nick:": u.nick, "email": u.email, "birth": u.birth, "invoices": res}, status=200, safe=False)
-
+    response = JsonResponse({"nick:": u.nick, "email": u.email,
+                             "birth": u.birth, "invoices": res}, status=200, safe=False)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
 # REGISTRÁCIA
 
 
