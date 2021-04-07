@@ -14,6 +14,8 @@ import json
 import os
 from django.views.decorators.http import require_http_methods
 import base64
+from django.core import serializers
+from django.core.serializers.json import DjangoJSONEncoder
 
 # GET user info
 
@@ -69,10 +71,20 @@ def signUp(request):
                 myuser = User.objects.create(
                     nick=body["nick"], email=body["email"], birth=body["birth"], password=hashed.decode(), id_invoice=id_inv)
                 myuser.save()
-                return JsonResponse(myuser.id, status=200, safe=False)
+                response = JsonResponse(myuser.id, status=200, safe=False)
+                response["Access-Control-Allow-Origin"] = "*"
+                response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+                response["Access-Control-Max-Age"] = "1000"
+                response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+                return response
             else:
                 res["errors"] = "Not adult"
-    return JsonResponse(res, status=status_code)
+    response = JsonResponse(res, status=status_code)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
 
 # PRIHLASENIE
 
@@ -91,11 +103,26 @@ def logIn(request):
     if user and isinstance(body['password'], str):
         hashed = user.password.encode()
         if bcrypt.hashpw(body['password'].encode(), hashed) == hashed:
-            return HttpResponse(user.id, status=200)
+            response = JsonResponse({"id": user.id}, status=200)
+            response["Access-Control-Allow-Origin"] = "*"
+            response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+            response["Access-Control-Max-Age"] = "1000"
+            response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+            return response
         else:
-            return HttpResponse(status=401)
+            response = JsonResponse(status=401)
+            response["Access-Control-Allow-Origin"] = "*"
+            response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+            response["Access-Control-Max-Age"] = "1000"
+            response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+            return response
     else:
-        return HttpResponse(status=401)
+        response = JsonResponse(status=401)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+        return response
 
 
 @csrf_exempt
@@ -103,7 +130,12 @@ def logIn(request):
 def logOut(request):
     body = json.loads(request.body)
     u = body['id']
-    return JsonResponse(0, status=200, safe=False)
+    response = JsonResponse({"id": u}, status=200)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
 
 # DRUHY ZVIERAT
 
@@ -117,13 +149,23 @@ def pets(request):
     if species != None:
         res = Details.objects.filter(
             species__iexact=species).values_list('kind').distinct()
-        return JsonResponse(list(res), status=200, safe=True)
+        response = JsonResponse(list(res), status=200, safe=True)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+        return response
 
     kind = request.GET.get('kind')
     if kind != None:
         res = Details.objects.filter(
             kind__iexact=kind).values_list('breed')
-        return JsonResponse(list(res), status=200, safe=False)
+        response = JsonResponse(list(res), status=200, safe=False)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+        return response
 
     breed = request.GET.get('breed')
     if breed != None:
@@ -131,9 +173,20 @@ def pets(request):
             breed__iexact=breed).values_list('name', 'age', 'weight', 'food', 'info', 'price')
         animal = res.values('id')
         id_animal = animal[0]['id']
-        return JsonResponse(list(res.values('id', 'name', 'age', 'weight', 'food', 'info', 'price')), status=200, safe=False)
+        response = JsonResponse(list(res.values(
+            'id', 'name', 'age', 'weight', 'food', 'info', 'price')), status=200, safe=False)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+        return response
 
-    return JsonResponse(list(pets), status=200, safe=False)
+    response = JsonResponse(list(pets), status=200, safe=False)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
 
 
 # UPRAVA FONDU ZVIERATA
@@ -150,7 +203,12 @@ def addFond(request):
     amount = a.fond
     a.fond = num + float(amount)
     a.save()
-    return HttpResponse(status=200)
+    response = JsonResponse(status=200)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
 
 # ADOPCIA (vytvorenie faktury)
 
@@ -162,7 +220,12 @@ def invoice(request):
     i = Invoice(id_pet=body['id_pet'], id_user=body['id_user'],
                 date=datetime.now(), amount=price)
     i.save()
-    return HttpResponse(status=201)
+    response = JsonResponse(status=201)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
 
 # ADOPCIA (priradenie faktury)
 
@@ -175,10 +238,19 @@ def addInvoice(request):
         u = User.objects.get(id=i_userId)
         u.id_invoice.append(i.id)
         u.save()
-        return HttpResponse(status=200)
+        response = JsonResponse(status=200)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+        return response
     else:
-        return HttpResponse(status=400)
-
+        response = JsonResponse(status=400)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+        return response
 
 # PRIDANIE OBRAZKOV
 
@@ -204,7 +276,13 @@ def addImages(request):
         a.save()
         images = []
 
-    return HttpResponse(status=200)
+    response = JsonResponse(status=200)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
+
 
 # FILTROVANIE ZVIERATA
 
@@ -218,7 +296,13 @@ def searchPet(request):
                 filters[key] = value
         filter_list = Details.objects.filter(
             **filters).values_list('id', 'breed')
-        return JsonResponse(list(filter_list.values('id', 'breed')), status=200, safe=False)
+        response = JsonResponse(
+            list(filter_list.values('id', 'breed')), status=200, safe=False)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+        return response
 
 
 # DELETE ADOPTOVANEHO
@@ -229,6 +313,16 @@ def delPet(request):
     if(Pet.objects.filter(id=id).exists()):
         Pet.objects.filter(id=id).delete()
         Details.objects.filter(id=id).delete()
-        return HttpResponse(status=200)
+        response = JsonResponse(status=200)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+        return response
     else:
-        return HttpResponse(status=404)
+        response = JsonResponse(status=404)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+        return response

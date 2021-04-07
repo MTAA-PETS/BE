@@ -9,8 +9,8 @@ urlpatterns = [
     path('user/login/', views.logIn),
     path('user/logout/', views.logOut),
     path('user/addInvoice/', views.addInvoice),
-    path('pets/', views.pets),
-    path('pets/search/', views.searchPet),
+    path('pets/', views.pets),  # toto
+    path('pets/search/', views.searchPet),  # toto
     path('pets/addFond/', views.addFond),
     path('pets/addImages/', views.addImages),
     path('pets/delete/', views.delPet),
