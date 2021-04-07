@@ -18,7 +18,7 @@ import base64
 # GET user info
 
 
-@api_view(['GET'])
+@api_view(['GET', 'OPTIONS'])
 def getUser(request, id):
     u = User.objects.get(id=id)
     invoices = u.id_invoice
@@ -40,7 +40,7 @@ def getUser(request, id):
 
 
 @csrf_exempt
-@require_http_methods(["POST"])
+@require_http_methods(["POST", "OPTIONS"])
 def signUp(request):
 
     res = {}
@@ -78,7 +78,7 @@ def signUp(request):
 
 
 @csrf_exempt
-@require_http_methods(["POST"])
+@require_http_methods(["POST", "OPTIONS"])
 def logIn(request):
     body = json.loads(request.body)
     user = None
@@ -99,7 +99,7 @@ def logIn(request):
 
 
 @csrf_exempt
-@require_http_methods(["POST"])
+@require_http_methods(["POST", "OPTIONS"])
 def logOut(request):
     body = json.loads(request.body)
     u = body['id']
@@ -108,7 +108,7 @@ def logOut(request):
 # DRUHY ZVIERAT
 
 
-@api_view(['get'])
+@api_view(['GET', 'OPTIONS'])
 def pets(request):
     pets = Details.objects.order_by(
         'species').values_list('species').distinct()
@@ -139,7 +139,7 @@ def pets(request):
 # UPRAVA FONDU ZVIERATA
 
 
-@api_view(['PUT'])
+@api_view(['PUT', 'OPTIONS'])
 def addFond(request):
     body = json.loads(request.body)
     num = float(body['amount'])
@@ -155,7 +155,7 @@ def addFond(request):
 # ADOPCIA (vytvorenie faktury)
 
 
-@api_view(['POST'])
+@api_view(['POST', 'OPTIONS'])
 def invoice(request):
     body = json.loads(request.body)
     price = Details.objects.get(pk=body['id_pet']).price
@@ -167,7 +167,7 @@ def invoice(request):
 # ADOPCIA (priradenie faktury)
 
 
-@api_view(['PUT'])
+@api_view(['PUT', 'OPTIONS'])
 def addInvoice(request):
     i = Invoice.objects.latest('id')
     i_userId = i.id_user
@@ -183,7 +183,7 @@ def addInvoice(request):
 # PRIDANIE OBRAZKOV
 
 
-@api_view(['PUT'])
+@api_view(['PUT', 'OPTIONS'])
 def addImages(request):
     lowest = Pet.objects.earliest('id')
     highest = Pet.objects.latest('id')
@@ -209,7 +209,7 @@ def addImages(request):
 # FILTROVANIE ZVIERATA
 
 
-@api_view(['GET'])
+@api_view(['GET', 'OPTIONS'])
 def searchPet(request):
     if request.method == 'GET':
         filters = {}
@@ -222,7 +222,7 @@ def searchPet(request):
 
 
 # DELETE ADOPTOVANEHO
-@api_view(['DELETE'])
+@api_view(['DELETE', 'OPTIONS'])
 def delPet(request):
     body = json.loads(request.body)
     id = body['id']
