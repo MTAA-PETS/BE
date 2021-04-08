@@ -110,14 +110,14 @@ def logIn(request):
             response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
             return response
         else:
-            response = JsonResponse(status=401)
+            response = HttpResponse(status=401)
             response["Access-Control-Allow-Origin"] = "*"
             response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
             response["Access-Control-Max-Age"] = "1000"
             response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
             return response
     else:
-        response = JsonResponse(status=401)
+        response = HttpResponse(status=401)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
         response["Access-Control-Max-Age"] = "1000"
@@ -203,7 +203,7 @@ def addFond(request):
     amount = a.fond
     a.fond = num + float(amount)
     a.save()
-    response = JsonResponse(status=200)
+    response = HttpResponse(status=200)
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
@@ -220,7 +220,7 @@ def invoice(request):
     i = Invoice(id_pet=body['id_pet'], id_user=body['id_user'],
                 date=datetime.now(), amount=price)
     i.save()
-    response = JsonResponse(status=201)
+    response = HttpResponse(status=201)
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
@@ -238,14 +238,14 @@ def addInvoice(request):
         u = User.objects.get(id=i_userId)
         u.id_invoice.append(i.id)
         u.save()
-        response = JsonResponse(status=200)
+        response = HttpResponse(status=200)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
     else:
-        response = JsonResponse(status=400)
+        response = HttpResponse(status=400)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
         response["Access-Control-Max-Age"] = "1000"
@@ -276,7 +276,7 @@ def addImages(request):
         a.save()
         images = []
 
-    response = JsonResponse(status=200)
+    response = HttpResponse(status=200)
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
@@ -313,14 +313,14 @@ def delPet(request):
     if(Pet.objects.filter(id=id).exists()):
         Pet.objects.filter(id=id).delete()
         Details.objects.filter(id=id).delete()
-        response = JsonResponse(status=200)
+        response = HttpResponse(status=200)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
     else:
-        response = JsonResponse(status=404)
+        response = HttpResponse(status=404)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
         response["Access-Control-Max-Age"] = "1000"
