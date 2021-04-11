@@ -150,7 +150,7 @@ def pets(request):
     if species != None:
         res = Details.objects.filter(
             species__iexact=species).values_list('kind').distinct()
-        response = JsonResponse(list(res), status=200, safe=True)
+        response = JsonResponse(list(res), status=200, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
         response["Access-Control-Max-Age"] = "1000"
