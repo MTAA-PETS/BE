@@ -79,6 +79,7 @@ def signUp(request):
                 return response
             else:
                 res["errors"] = "Not adult"
+                status_code = 400
     response = JsonResponse(res, status=status_code)
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
