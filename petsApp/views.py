@@ -149,7 +149,7 @@ def pets(request):
     species = request.GET.get('species')
     if species != None:
         res = Details.objects.filter(
-            species__iexact=species).values_list('kind').distinct()
+            species__contains=species).values_list('kind').distinct()
         response = JsonResponse(list(res), status=200, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
@@ -160,7 +160,7 @@ def pets(request):
     kind = request.GET.get('kind')
     if kind != None:
         res = Details.objects.filter(
-            kind__iexact=kind).values_list('breed')
+            kind__contains=kind).values_list('breed')
         response = JsonResponse(list(res), status=200, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
@@ -171,7 +171,7 @@ def pets(request):
     breed = request.GET.get('breed')
     if breed != None:
         res = Details.objects.filter(
-            breed__iexact=breed).values_list('name', 'age', 'weight', 'food', 'info', 'price')
+            breed__contains=breed).values_list('name', 'age', 'weight', 'food', 'info', 'price')
         animal = res.values('id')
         id_animal = animal[0]['id']
         response = JsonResponse(list(res.values(
