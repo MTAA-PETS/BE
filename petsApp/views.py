@@ -172,10 +172,10 @@ def pets(request):
     if breed != None:
         res = Details.objects.filter(
             breed__icontains=breed).values_list('name', 'age', 'weight', 'food', 'info', 'price')
-        animal = res.values('id')
-        id_animal = animal[0]['id']
+        animal = Pet.objects.filter(id=res['id'])
+        imgs = animal['imgs']
         response = JsonResponse(list(res.values(
-            'id', 'name', 'age', 'weight', 'food', 'info', 'price')), status=200, safe=False)
+            'id', 'name', 'age', 'weight', 'food', 'info', 'price'), imgs), status=200, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
         response["Access-Control-Max-Age"] = "1000"
