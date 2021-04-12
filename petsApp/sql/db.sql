@@ -74,16 +74,16 @@ INSERT INTO public."petsApp_pet" (id_user, Fond, id_details, imgs) VALUES(0, 0, 
 INSERT INTO public."petsApp_details" (species, kind, breed, name, age, weight, food, info, price) VALUES('Cicavec', 'Fretka', 'Fretka štandardná', 'Mina', 1, 0.7, 'granule', 'Fretka, ktorá sa rada hrá.', 130);
 INSERT INTO public."petsApp_pet" (id_user, Fond, id_details, imgs) VALUES(0, 0, (SELECT id FROM public."petsApp_details" ORDER BY id DESC LIMIT 1), '{}');
 
-INSERT INTO public."petsApp_details" (species, kind, breed, name, age, weight, food, info, price) VALUES('Cicavec', 'Fretka', 'Poloangora', 'Kia', 1, 0.8, 'granule', 'Fretka, ktorá sa rada učí.', 100);
+INSERT INTO public."petsApp_details" (species, kind, breed, name, age, weight, food, info, price) VALUES('Cicavec', 'Fretka', 'Fretka poloangora', 'Kia', 1, 0.8, 'granule', 'Fretka, ktorá sa rada učí.', 100);
 INSERT INTO public."petsApp_pet" (id_user, Fond, id_details, imgs) VALUES(0, 0, (SELECT id FROM public."petsApp_details" ORDER BY id DESC LIMIT 1), '{}');
 
-INSERT INTO public."petsApp_details" (species, kind, breed, name, age, weight, food, info, price) VALUES('Cicavec', 'Fretka', 'Angora', 'Bína', 1, 1.5, 'granule', 'Fretka vhodná na hru pre malé deti.', 200);
+INSERT INTO public."petsApp_details" (species, kind, breed, name, age, weight, food, info, price) VALUES('Cicavec', 'Fretka', 'Fretka angora', 'Bína', 1, 1.5, 'granule', 'Fretka vhodná na hru pre malé deti.', 200);
 INSERT INTO public."petsApp_pet" (id_user, Fond, id_details, imgs) VALUES(0, 0, (SELECT id FROM public."petsApp_details" ORDER BY id DESC LIMIT 1), '{}');
 
-INSERT INTO public."petsApp_details" (species, kind, breed, name, age, weight, food, info, price) VALUES('Cicavec', 'Fretka', 'Tmavooká biela', 'Zia', 1, 1.6, 'granule', 'Táto fretka je zvuknutá behať a rada je vonku.', 70);
+INSERT INTO public."petsApp_details" (species, kind, breed, name, age, weight, food, info, price) VALUES('Cicavec', 'Fretka', 'Fretka tmavooká biela', 'Zia', 1, 1.6, 'granule', 'Táto fretka je zvuknutá behať a rada je vonku.', 70);
 INSERT INTO public."petsApp_pet" (id_user, Fond, id_details, imgs) VALUES(0, 0, (SELECT id FROM public."petsApp_details" ORDER BY id DESC LIMIT 1), '{}');
 
-INSERT INTO public."petsApp_details" (species, kind, breed, name, age, weight, food, info, price) VALUES('Cicavec', 'Fretka', 'Čokoládová', 'Cia', 1, 0.98, 'granule', 'Fretka vhodná pre ľahký výcvik. Je veľmi spoločenská, a neustále sa potrebuje prejavovať.' , 133);
+INSERT INTO public."petsApp_details" (species, kind, breed, name, age, weight, food, info, price) VALUES('Cicavec', 'Fretka', 'Fretka čokoládová', 'Cia', 1, 0.98, 'granule', 'Fretka vhodná pre ľahký výcvik. Je veľmi spoločenská, a neustále sa potrebuje prejavovať.' , 133);
 INSERT INTO public."petsApp_pet" (id_user, Fond, id_details, imgs) VALUES(0, 0, (SELECT id FROM public."petsApp_details" ORDER BY id DESC LIMIT 1), '{}');
 
 --#LISKINTO Y
