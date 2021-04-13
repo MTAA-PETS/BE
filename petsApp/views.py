@@ -31,7 +31,7 @@ def getUser(request, id):
         name = pet.name
         res.append({"id:": i, "name:": name,
                     "date:": invoice.date, "amount:": invoice.amount})
-    response = JsonResponse({"nick:": u.nick, "email": u.email,
+    response = JsonResponse({"nick": u.nick, "email": u.email,
                              "birth": u.birth, "invoices": res}, status=200, safe=False)
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
