@@ -29,8 +29,8 @@ def getUser(request, id):
         invoice = Invoice.objects.get(id=i)
         pet = Details.objects.get(id=invoice.id_pet)
         name = pet.name
-        res.append({"id:": i, "name:": name,
-                    "date:": invoice.date, "amount:": invoice.amount})
+        res.append({"id": i, "name": name,
+                    "date": invoice.date, "amount": invoice.amount})
     response = JsonResponse({"nick": u.nick, "email": u.email,
                              "birth": u.birth, "invoices": res}, status=200, safe=False)
     response["Access-Control-Allow-Origin"] = "*"
