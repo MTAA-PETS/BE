@@ -192,12 +192,11 @@ def pets(request):
 
 
 @api_view(['PUT', 'OPTIONS'])
-def addFond(request):
+def addFond(request, id):
     body = json.loads(request.body)
     num = float(body['amount'])
     if num < 5.0:
         return HttpResponse(status=422)
-    id = body['id']
     a = Pet.objects.get(pk=id)
     amount = a.fond
     a.fond = num + float(amount)
