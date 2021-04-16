@@ -303,6 +303,18 @@ def searchPet(request):
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
 
+@api_view(['GET', 'OPTIONS'])
+def getFond(request, pet):
+    d = Details.objects.filter(breed__icontains=pet)
+    p = Pet.objects.get(id=d['id'])
+    fond = p['fond']
+    response = JsonResponse({"fond": fond}, status=200, safe=False)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
+
 
 # DELETE ADOPTOVANEHO
 @api_view(['DELETE', 'OPTIONS'])
