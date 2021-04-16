@@ -34,7 +34,7 @@ def getUser(request, id):
     response = JsonResponse({"nick": u.nick, "email": u.email,
                              "birth": u.birth, "invoices": res}, status=200, safe=False)
     response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
@@ -73,7 +73,7 @@ def signUp(request):
                 myuser.save()
                 response = JsonResponse(myuser.id, status=200, safe=False)
                 response["Access-Control-Allow-Origin"] = "*"
-                response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+                response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
                 response["Access-Control-Max-Age"] = "1000"
                 response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
                 return response
@@ -82,7 +82,7 @@ def signUp(request):
                 status_code = 400
     response = JsonResponse(res, status=status_code)
     response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
@@ -106,21 +106,21 @@ def logIn(request):
         if bcrypt.hashpw(body['password'].encode(), hashed) == hashed:
             response = JsonResponse({"id": user.id}, status=200)
             response["Access-Control-Allow-Origin"] = "*"
-            response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+            response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
             response["Access-Control-Max-Age"] = "1000"
             response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
             return response
         else:
             response = HttpResponse(status=401)
             response["Access-Control-Allow-Origin"] = "*"
-            response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+            response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
             response["Access-Control-Max-Age"] = "1000"
             response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
             return response
     else:
         response = HttpResponse(status=401)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
@@ -133,7 +133,7 @@ def logOut(request):
     u = body['id']
     response = JsonResponse({"id": u}, status=200)
     response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
@@ -152,7 +152,7 @@ def pets(request):
             species__icontains=species).values_list('kind').distinct()
         response = JsonResponse(list(res), status=200, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
@@ -163,7 +163,7 @@ def pets(request):
             kind__icontains=kind).values_list('breed')
         response = JsonResponse(list(res), status=200, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
@@ -175,14 +175,14 @@ def pets(request):
         response = JsonResponse(list(res.values(
             'id', 'name', 'age', 'weight', 'food', 'info', 'price')), status=200, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
 
     response = JsonResponse(list(pets), status=200, safe=False)
     response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
@@ -203,7 +203,7 @@ def addFond(request, id):
     a.save()
     response = HttpResponse(status=200)
     response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
@@ -220,7 +220,7 @@ def invoice(request):
     i.save()
     response = HttpResponse(status=201)
     response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
@@ -238,14 +238,14 @@ def addInvoice(request):
         u.save()
         response = HttpResponse(status=200)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
     else:
         response = HttpResponse(status=400)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
@@ -276,7 +276,7 @@ def addImages(request):
 
     response = HttpResponse(status=200)
     response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
@@ -297,7 +297,7 @@ def searchPet(request):
         response = JsonResponse(
             list(filter_list.values('id', 'breed')), status=200, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
@@ -309,7 +309,7 @@ def getFond(request, pet):
     p = Pet.objects.get(pk=d).fond
     response = JsonResponse({"fond": p})
     response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
@@ -325,14 +325,14 @@ def delPet(request):
         Details.objects.filter(id=id).delete()
         response = HttpResponse(status=200)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
     else:
         response = HttpResponse(status=404)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
