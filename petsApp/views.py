@@ -190,8 +190,8 @@ def pets(request):
 
 # UPRAVA FONDU ZVIERATA
 
-
-@api_view(['PUT', 'OPTIONS'])
+@csrf_exempt
+@require_http_methods(["PUT", "OPTIONS"])
 def addFond(request, id):
     body = json.loads(request.body)
     num = float(body['amount'])
