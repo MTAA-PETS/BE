@@ -196,7 +196,12 @@ def addFond(request, id):
     body = json.loads(request.body)
     num = float(body['amount'])
     if num < 5.0:
-        return HttpResponse(status=422)
+        response = HttpResponse(status=422)
+        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
+        response["Access-Control-Max-Age"] = "1000"
+        response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+        return response
     a = Pet.objects.get(pk=id)
     amount = a.fond
     a.fond = num + float(amount)
