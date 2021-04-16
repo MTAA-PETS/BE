@@ -303,12 +303,12 @@ def searchPet(request):
         response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
         return response
 
+
 @api_view(['GET', 'OPTIONS'])
 def getFond(request, pet):
-    d = Details.objects.get(breed=pet)
-    p = Pet.objects.get(id=d['id'])
-    fond = p['fond']
-    response = JsonResponse({"fond": fond}, status=200, safe=False)
+    d = Details.objects.get(breed=pet).id
+    p = Pet.objects.get(pk=d).fond
+    response = JsonResponse({"fond": p})
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS"
     response["Access-Control-Max-Age"] = "1000"
