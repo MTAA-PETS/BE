@@ -196,7 +196,7 @@ def addFond(request, id):
     body = json.loads(request.body)
     num = float(body['amount'])
     if num < 5.0:
-        response = HttpResponse(status=422)
+        response = JsonResponse({"value":"notok"},status=422, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
@@ -206,7 +206,7 @@ def addFond(request, id):
     amount = a.fond
     a.fond = num + float(amount)
     a.save()
-    response = HttpResponse(status=200)
+    response = JsonResponse({"value":"ok"},status=200, safe=False)
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
