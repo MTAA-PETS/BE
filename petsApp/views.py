@@ -305,7 +305,7 @@ def searchPet(request):
 
 @api_view(['GET', 'OPTIONS'])
 def getFond(request, pet):
-    d = Details.objects.filter(breed__icontains=pet)
+    d = Details.objects.get(breed=pet)
     p = Pet.objects.get(id=d['id'])
     fond = p['fond']
     response = JsonResponse({"fond": fond}, status=200, safe=False)
