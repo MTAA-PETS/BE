@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Details',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('species', models.CharField(max_length=20)),
                 ('kind', models.CharField(max_length=20)),
                 ('breed', models.CharField(max_length=50)),
@@ -30,9 +31,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Invoice',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('id_pet', models.IntegerField()),
                 ('id_user', models.IntegerField()),
+                ('petname', models.CharField(max_length=200)),
                 ('date', models.DateTimeField()),
                 ('amount', models.DecimalField(decimal_places=2, max_digits=6)),
             ],
@@ -40,22 +43,26 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Pet',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('id_user', models.IntegerField()),
                 ('fond', models.DecimalField(decimal_places=2, max_digits=6)),
                 ('id_details', models.IntegerField()),
-                ('imgs', django.contrib.postgres.fields.ArrayField(base_field=models.BinaryField(blank=True), size=4)),
+                ('imgs', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.BinaryField(blank=True), size=4)),
             ],
         ),
         migrations.CreateModel(
             name='User',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(auto_created=True,
+                                        primary_key=True, serialize=False, verbose_name='ID')),
                 ('nick', models.CharField(max_length=30, unique=True)),
                 ('email', models.EmailField(max_length=50, unique=True)),
                 ('birth', models.DateField()),
                 ('password', models.CharField(max_length=255)),
-                ('id_invoice', django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(), size=100)),
+                ('id_invoice', django.contrib.postgres.fields.ArrayField(
+                    base_field=models.IntegerField(), size=100)),
             ],
         ),
     ]

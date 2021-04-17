@@ -219,7 +219,7 @@ def addFond(request, id):
 def invoice(request):
     body = json.loads(request.body)
     price = Details.objects.get(pk=body['id_pet']).price
-    petname = Details.objects.get(pk=body['id_pet']).name
+    petname = Details.objects.get(pk=body['id_pet']).breed
     i = Invoice(id_pet=body['id_pet'], id_user=body['id_user'],
                 date=datetime.now(), amount=price, petname=petname)
     i.save()
