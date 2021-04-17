@@ -27,8 +27,7 @@ def getUser(request, id):
     res = []
     for i in invoices:
         invoice = Invoice.objects.get(id=i)
-        pet = Details.objects.get(id=invoice.id_pet)
-        name = pet.name
+        name = invoice.petname
         res.append({"id": i, "name": name,
                     "date": invoice.date, "amount": invoice.amount})
     response = JsonResponse({"nick": u.nick, "email": u.email,
@@ -220,8 +219,9 @@ def addFond(request, id):
 def invoice(request):
     body = json.loads(request.body)
     price = Details.objects.get(pk=body['id_pet']).price
+    petname = Pet.objects.get(pk=body['id_pet']).name
     i = Invoice(id_pet=body['id_pet'], id_user=body['id_user'],
-                date=datetime.now(), amount=price)
+                date=datetime.now(), amount=price, petname = petname)
     i.save()
     response = HttpResponse(status=201)
     response["Access-Control-Allow-Origin"] = "*"

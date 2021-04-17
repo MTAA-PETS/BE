@@ -14,6 +14,7 @@ class User(models.Model):
 class Invoice(models.Model):
     id_pet = models.IntegerField()
     id_user = models.IntegerField()
+    petname = models.CharField(max_length=200)
     date = models.DateTimeField()
     amount = models.DecimalField(max_digits=6, decimal_places=2)
 
