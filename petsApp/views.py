@@ -278,7 +278,7 @@ def addImage(request):
 def getImage(request, id):
     u = User.objects.get(pk=id)
     img = u.image
-    response = HttpResponse(img)
+    response = JsonResponse({"data": img}, status=200, safe=False)
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
