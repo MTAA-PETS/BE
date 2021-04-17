@@ -63,6 +63,7 @@ class Migration(migrations.Migration):
                 ('password', models.CharField(max_length=255)),
                 ('id_invoice', django.contrib.postgres.fields.ArrayField(
                     base_field=models.IntegerField(), size=100)),
+                ('image', models.TextField()),
             ],
         ),
     ]

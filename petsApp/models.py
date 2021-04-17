@@ -9,6 +9,7 @@ class User(models.Model):
     birth = models.DateField()
     password = models.CharField(max_length=255)
     id_invoice = ArrayField(models.IntegerField(), size=100)
+    image = models.TextField()
 
 
 class Invoice(models.Model):

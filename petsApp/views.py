@@ -68,7 +68,7 @@ def signUp(request):
                     body['password'].encode(), bcrypt.gensalt())
                 id_inv = []
                 myuser = User.objects.create(
-                    nick=body["nick"], email=body["email"], birth=body["birth"], password=hashed.decode(), id_invoice=id_inv)
+                    nick=body["nick"], email=body["email"], birth=body["birth"], password=hashed.decode(), id_invoice=id_inv, image={})
                 myuser.save()
                 response = JsonResponse(myuser.id, status=200, safe=False)
                 response["Access-Control-Allow-Origin"] = "*"
@@ -256,6 +256,34 @@ def addInvoice(request):
         return response
 
 # PRIDANIE OBRAZKOV
+
+
+@api_view(['PUT', 'OPTIONS'])
+def addImage(request):
+    body = json.loads(request.body)
+    id = body['id']
+    img = body['img']
+    u = User.objects.get(pk=id)
+    u.image = img
+    u.save()
+    response = HttpResponse(status=200)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
+
+
+@api_view(['GET', 'OPTIONS'])
+def getImage(request, id):
+    u = User.objects.get(pk=id)
+    img = u.image
+    response = HttpResponse(img)
+    response["Access-Control-Allow-Origin"] = "*"
+    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
+    response["Access-Control-Max-Age"] = "1000"
+    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
+    return response
 
 
 @api_view(['PUT', 'OPTIONS'])

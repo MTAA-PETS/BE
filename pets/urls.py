@@ -5,6 +5,8 @@ from petsApp import views
 
 urlpatterns = [
     path('user/<int:id>/', views.getUser),
+    path('user/addImage/', views.addImage),
+    path('user/getImage/<int:id>/', views.getImage),
     path('user/signup/', views.signUp),
     path('user/login/', views.logIn),
     path('user/logout/', views.logOut),
