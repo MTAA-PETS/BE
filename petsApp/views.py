@@ -195,7 +195,7 @@ def addFond(request, id):
     body = json.loads(request.body)
     num = float(body['amount'])
     if num < 5.0:
-        response = JsonResponse({"value":"notok"},status=422, safe=False)
+        response = JsonResponse({"value": "notok"}, status=422, safe=False)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
         response["Access-Control-Max-Age"] = "1000"
@@ -205,7 +205,7 @@ def addFond(request, id):
     amount = a.fond
     a.fond = num + float(amount)
     a.save()
-    response = JsonResponse({"value":"ok"},status=200, safe=False)
+    response = JsonResponse({"value": "ok"}, status=200, safe=False)
     response["Access-Control-Allow-Origin"] = "*"
     response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
     response["Access-Control-Max-Age"] = "1000"
@@ -219,9 +219,9 @@ def addFond(request, id):
 def invoice(request):
     body = json.loads(request.body)
     price = Details.objects.get(pk=body['id_pet']).price
-    petname = Pet.objects.get(pk=body['id_pet']).name
+    petname = Details.objects.get(pk=body['id_pet']).name
     i = Invoice(id_pet=body['id_pet'], id_user=body['id_user'],
-                date=datetime.now(), amount=price, petname = petname)
+                date=datetime.now(), amount=price, petname=petname)
     i.save()
     response = HttpResponse(status=201)
     response["Access-Control-Allow-Origin"] = "*"
