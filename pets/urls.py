@@ -15,7 +15,6 @@ urlpatterns = [
     path('pets/search/', views.searchPet),  # toto
     path('pets/addFond/<int:id>', views.addFond),
     path('pets/fond/<pet>/', views.getFond),
-    path('pets/addImages/', views.addImages),
     path('pets/delete/', views.delPet),
     path('invoice/', views.invoice),
 ]

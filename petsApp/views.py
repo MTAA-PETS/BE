@@ -285,36 +285,6 @@ def getImage(request, id):
     response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
     return response
 
-
-@api_view(['PUT', 'OPTIONS'])
-def addImages(request):
-    lowest = Pet.objects.earliest('id')
-    highest = Pet.objects.latest('id')
-    images = []
-    count = 0
-    #img = base64.encodestring(open('C:/Users/Lucia/Desktop/FIIT/6.Semester/MTAA/Pets_App/pets/petsApp/img/1_1.jpg', 'rb').read())
-    for i in range(lowest.id, highest.id+1):
-        count += 1
-        for k in range(1, 3):
-            if(os.path.exists(os.path.join(os.path.dirname(__file__), 'img\\', f'{count}_{k}.jpg'))):
-                obr = os.path.join(os.path.dirname(__file__),
-                                   'img\\', f'{count}_{k}.jpg')
-                path = obr.replace('\\', '/')
-                img = base64.encodestring(open(path, 'rb').read())
-                images.append(img)
-        a = Pet.objects.get(pk=i)
-        a.imgs = images
-        a.save()
-        images = []
-
-    response = HttpResponse(status=200)
-    response["Access-Control-Allow-Origin"] = "*"
-    response["Access-Control-Allow-Methods"] = "GET, OPTIONS, PUT, POST, DELETE"
-    response["Access-Control-Max-Age"] = "1000"
-    response["Access-Control-Allow-Headers"] = "X-Requested-With, Content-Type"
-    return response
-
-
 # FILTROVANIE ZVIERATA
 
 

@@ -36,4 +36,3 @@ class Pet(models.Model):
     id_user = models.IntegerField()
     fond = models.DecimalField(max_digits=6, decimal_places=2)
     id_details = models.IntegerField()
-    imgs = ArrayField(models.BinaryField(blank=True), size=4)

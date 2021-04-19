@@ -48,8 +48,6 @@ class Migration(migrations.Migration):
                 ('id_user', models.IntegerField()),
                 ('fond', models.DecimalField(decimal_places=2, max_digits=6)),
                 ('id_details', models.IntegerField()),
-                ('imgs', django.contrib.postgres.fields.ArrayField(
-                    base_field=models.BinaryField(blank=True), size=4)),
             ],
         ),
         migrations.CreateModel(
